@@ -125,7 +125,7 @@ public class ACrawlerProcessor extends CommonCBase
 				WriteLineToLog("users left to crawled=" + QueueCrawlinTargets.GetInstance().NumbertOfTargets(), ELogLevel.INFORMATION);
 				runner = new CrawlerRunner(m_crawlerFactory.GenerateCrawler(crawlType, params), m_depthbehavior.get(crawlType),new String(NextTarget));
 				runner.SetHeadElement(headElement);
-				String runMsg ="execute Runner for Target="+NextTarget;
+				String runMsg ="execute Runner:# " + runner.getId()+" for Target="+NextTarget;
 				WriteLineToLog(runMsg, ELogLevel.INFORMATION);
 				WriteToConsole(runMsg);
 				CrawledCount++;

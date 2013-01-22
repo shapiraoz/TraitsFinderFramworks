@@ -1,5 +1,6 @@
 package Core;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -13,13 +14,8 @@ public class CrawlerRunner extends Thread
 {
 
 	private ICrawler m_crawler ;
-	private String m_lock;
 	
 	
-	public String Getlock() {
-		return m_lock;
-	}
-
 	private ReentrantReadWriteLock m_lockObjFactory;
 	private Lock m_writeLockObj;
 	private IElement m_headElement;
@@ -61,7 +57,7 @@ public class CrawlerRunner extends Thread
 
 	public CrawlerRunner(String lock)
 	{
-		m_lock = lock;
+		//m_lock = lock;
 		
 	}
 	
@@ -70,15 +66,15 @@ public class CrawlerRunner extends Thread
 		Init();
 		m_crawler = crawler;
 		m_recursive = recursive;
-		m_lock = Namelock;
+		//m_lock = Namelock;
 	}
 	
 	
 	public void run() 
 	{
 		
-		try
-		{
+		 
+		
 			if (m_crawler == null) return ;
 			IElement elm = m_crawler.Crawl(m_recursive);
 			if (elm!=null && m_headElement!=null)
@@ -87,26 +83,31 @@ public class CrawlerRunner extends Thread
 				{
 					elm.Serialize(); //write to graph 
 				}
-				m_writeLockObj.lock();
-				try
-				{
-					m_headElement.AddElement(elm);
-				}
-				finally
-				{
-					m_writeLockObj.unlock();
+				
+				try {
+					if (!m_writeLockObj.tryLock(8, TimeUnit.SECONDS))
+					{
+						return ;
+					}
+					else
+					{
+						try
+						{
+							m_headElement.AddElement(elm);
+						}
+						finally
+						{
+							m_writeLockObj.unlock();
+						}
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			
 			}
-		}
-		finally
-		{
-					
-			synchronized(m_lock)
-			{
-				m_lock.notify();
-			}
-		}
+		
+		
 		
 		//interrupt();
 		//notify();
