@@ -70,7 +70,7 @@ public class Neo4jSerializerTest extends CommonCBase{
 	public void testSave()
 	{
 		assertTrue(Neo4JActivation.IsActive());
-		Neo4JServices ns = new Neo4JServices(Neo4JActivation.GetGraphDatabaseService());
+		Neo4JServices ns = new Neo4JServices(Neo4JActivation.GetInstance().GetGraphDatabaseService());
 		assertTrue(m_serializer.Save());
 		long elementId = ns.GetNodeElementId(m_element);
 		WriteLineToLog("the element id is : "+elementId , ELogLevel.INFORMATION);

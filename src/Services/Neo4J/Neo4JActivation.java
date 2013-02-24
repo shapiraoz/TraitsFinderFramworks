@@ -2,7 +2,7 @@ package Services.Neo4J;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.kernel.EmbeddedGraphDatabase;
+
 
 public class Neo4JActivation 
 {
@@ -11,13 +11,14 @@ public class Neo4JActivation
 	private static GraphDatabaseService m_DBservice =null;
 	private static Neo4JActivation m_instance;
 	
-	public static GraphDatabaseService GetGraphDatabaseService()
+	public GraphDatabaseService GetGraphDatabaseService()
 	{
 		//GetInstance();
 		return m_DBservice;
 	}
 	
-	private static Neo4JActivation GetInstance()
+		
+	public static Neo4JActivation GetInstance()
 	{
 		if (m_instance == null)
 		{
@@ -36,7 +37,7 @@ public class Neo4JActivation
 	private Neo4JActivation()
 	{
 	   // new	GraphDatabaseFactory().newEmbeddedDatabaseBuilder("");
-	   
+		
 	}
 			
 	public static boolean Start(String DBpath)
