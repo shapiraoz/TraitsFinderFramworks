@@ -30,7 +30,7 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 					
 				}
 			}
-			m_neoServies = new Neo4JServices(Neo4JActivation.GetGraphDatabaseService());
+			m_neoServies = new Neo4JServices(Neo4JActivation.GetInstance().GetGraphDatabaseService());
 			if (m_neoServies==null)
 			{
 				WriteLineToLog("no neo4j service !!!",ELogLevel.ERROR);
@@ -42,7 +42,7 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 			return;
 			
 		}
-		m_neoServies = new Neo4JServices(Neo4JActivation.GetGraphDatabaseService());
+		m_neoServies = new Neo4JServices(Neo4JActivation.GetInstance().GetGraphDatabaseService());
 	}
 	
 	

@@ -16,7 +16,7 @@ public class CrawlerTargetsTest extends test {
 	
 	
 	@Test
-	public void CrawlerTargetsTest() {
+	public void CrawlingTargetsTest() {
 		ICrawlingTargets pUsersCrawlingTargets = QueueCrawlinTargets.GetInstance();
 		pUsersCrawlingTargets.AddTarget("Amit");
 		pUsersCrawlingTargets.AddTarget("Oz");
@@ -51,7 +51,7 @@ public class CrawlerTargetsTest extends test {
 									
 				@Override
 				public void run() {
-					CrawlerTargetsTest();
+					CrawlingTargetsTest();
 					try
 					{
 						Thread.sleep(50);

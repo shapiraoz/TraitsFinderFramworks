@@ -6,8 +6,9 @@ package Services.Neo4J;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
 
+import org.neo4j.cypher.ExecutionEngine;
+import org.neo4j.cypher.ExecutionResult;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -16,6 +17,7 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
+import org.neo4j.helpers.collection.IteratorUtil;
 
 import Core.CommonCBase;
 import Core.CoreContext;
@@ -105,6 +107,25 @@ public class Neo4JServices extends CommonCBase
 			}
 		}
 		return null;
+	}
+	
+	Relationship FindRelationQuery(Node src ,Node traget)
+	{
+		long srcId = src.getId();
+		long targetId = src.getId();		
+		ExecutionResult result= ExecutCyperQuery("START left=node("+ srcId +"), right=node(" +targetId +") RELATE left-[r:KNOWS]->right RETURN r");
+		Iterator<Relationship> rs =  (Iterator<Relationship>) result.columnAs("r");
+		for (Relationship r :IteratorUtil.asIterable((Iterator<Relationship>) rs))
+		{
+			return r;
+		}
+		return null;
+	}
+	
+	public ExecutionResult ExecutCyperQuery(String query)
+	{
+		ExecutionEngine engine = new ExecutionEngine( Neo4JActivation.GetInstance().GetGraphDatabaseService() );
+		return  engine.execute( query);
 	}
 	
 	public Relationship AddRelasion(IElement elm1 ,IElement elm2, RelationshipType relType)

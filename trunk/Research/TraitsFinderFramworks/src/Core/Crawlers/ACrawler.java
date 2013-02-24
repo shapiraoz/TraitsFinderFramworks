@@ -38,7 +38,8 @@ public class ACrawler  extends CommonCBase
 		return  m_collector.SaveDataFile(filePath, UrlPath);
 	}
 	
-	protected boolean DownloadFile(String filePath,String UrlPath)
+	@SuppressWarnings("deprecation")
+	protected boolean DownloadFile(String filePath,String UrlPath) throws InterruptedException
 	{
 		
 		boolean fileExist = FileServices.PathExist(filePath);
@@ -78,6 +79,12 @@ public class ACrawler  extends CommonCBase
 		{
 			WriteLineToLog("collector thread is still alive going to interrupt it ", ELogLevel.WARNING);
 			collectorThread.interrupt();
+			if(collectorThread.isAlive()) 
+				{
+					Thread.sleep(5000);
+					collectorThread.stop();
+					
+				}
 		}
 		return collectorExecutors.GetResult();
 		
