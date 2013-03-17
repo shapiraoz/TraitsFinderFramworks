@@ -13,13 +13,17 @@ import Core.CommonCBase;
 import Core.CoreContext;
 import Services.FileServices;
 import Services.Log.ELogLevel;
+import Services.Log.Logger;
 
 public class test extends CommonCBase {
 
+	
+	
 	@Before
 	public void setUp() throws Exception
 	{
-		CoreContext.LOGGER_LEVEL =ELogLevel.INFORMATION;
+		Logger.GetLogger();
+		CoreContext.LOGGER_LEVEL = ELogLevel.INFORMATION;
 		if (!FileServices.PathExist(CoreContext.ROOT_DATA_FOLDER))
 		{
 			FileServices.CreateFolder(this.getClass().getName(), CoreContext.ROOT_DATA_FOLDER);

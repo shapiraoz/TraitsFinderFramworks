@@ -8,6 +8,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import Services.FileServices;
+
 import Core.CoreContext;
 
 public class Logger
@@ -43,7 +45,7 @@ public class Logger
 	public static void WriteLine(String module, String msg,ELogLevel logLevel)
 	{
 		if (logLevel.compareTo(m_printLogLevel)>=0)
-		WriteStringToFile(String.format("|%s|[%-21s]-[%s:%s]\n",GetTimeStr(), module,logLevel.toString(),msg),m_filePath);
+		WriteStringToFile(String.format("|%s|[%-27s]-[%s:%s]\n",GetTimeStr(), module,logLevel.toString(),msg),m_filePath);
 	}
 	
 	private Logger(String filePath)
@@ -55,6 +57,8 @@ public class Logger
 	
 	static boolean WriteStringToFile(String str,String filePath )
 	{
+		return FileServices.WriteStringToFile(filePath, str,true);
+		/*
 		BufferedWriter out = null;
 		try
 		{
@@ -73,7 +77,7 @@ public class Logger
 			}
 		}
 		return true;
-			
+			*/
 	}
 
 	private static String GetTimeStr()

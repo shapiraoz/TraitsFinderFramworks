@@ -13,8 +13,7 @@ import Core.ACrawlerProcessor;
 
 public class CrawlerProccessorTest extends test{
 
-	private final int NUMBER_OF_THEARD_FOR_TEST =  5;
-	
+		
 	@Before
 	public void setUp() throws Exception 
 	{

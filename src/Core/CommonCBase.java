@@ -8,7 +8,7 @@ public abstract class CommonCBase
 	protected String GetClassName()
 	{
 		m_Name=this.getClass().getSimpleName();
-		return m_Name;
+		return  "" +Thread.currentThread().getId() +":" +m_Name;
 	}
 	
 	protected  void WriteLineToLog(String msg,ELogLevel logLevel)
