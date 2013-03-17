@@ -12,6 +12,8 @@ public class UserDataFactory //extends AbstractFactory
 		{
 			case eUserDataDictonary :
 				return new UserDataDictionary();
+		default:
+			break;
 		}
 		return null;
 	}

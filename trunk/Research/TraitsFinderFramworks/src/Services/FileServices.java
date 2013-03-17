@@ -1,6 +1,8 @@
 package Services;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import Services.Log.ELogLevel;
@@ -88,7 +90,30 @@ public class FileServices
 			return false;
 		}
 		
-	  	
+	  
+	}
+	
+	public static boolean WriteStringToFile(String filePath,String str ,boolean append)
+	{
+		BufferedWriter out = null;
+		try
+		{
+			  FileWriter fstream = new FileWriter(filePath,append);
+			  out = new BufferedWriter(fstream);
+			  out.write(str);
+			  out.close();
+		
+		}
+		catch (Exception e)
+		{
+			if (out != null)
+			{
+				try { out.close();} catch (IOException e1){}
+				return false;
+			}
+		}
+		return true;
+		
 	}
 	
 	public static boolean PathExist(String path)
@@ -98,7 +123,7 @@ public class FileServices
 	
 	private static void WriteLineToLog(String module, String msg,ELogLevel logLevel)
 	{
-		Logger.GetLogger().WriteLine(module,msg,logLevel);
+		Logger.WriteLine(module,msg,logLevel);
 	}
 
 	public static int NumberDaysFileNotModified(String path)

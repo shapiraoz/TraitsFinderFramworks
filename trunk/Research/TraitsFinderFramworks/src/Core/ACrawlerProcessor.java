@@ -2,12 +2,12 @@ package Core;
 
 
 
-import java.util.HashMap;
-
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 import java.util.Map;
-
 import Core.Interfaces.ICrawler;
-import Core.Interfaces.ICrawlerProcessor;
+
 
 import Elements.IElement;
 import Services.Log.ELogLevel;
@@ -62,7 +62,7 @@ public class ACrawlerProcessor extends CommonCBase
 		long leftUserToCrawl = QueueCrawlinTargets.GetInstance().NumbertOfTargets();
 		WriteLineToLog("NumbertOfTargets="+leftUserToCrawl, ELogLevel.INFORMATION);
 		long crawled = 0;
-		while (leftUserToCrawl > 0 && crawled <maxExcution)
+		while (leftUserToCrawl > 0 && crawled < maxExcution)
 		{
 			if (CrawlTopUserTarget(headElement,crawlType)!=null)
 			{
@@ -90,6 +90,17 @@ public class ACrawlerProcessor extends CommonCBase
 		return null;
 	}
 	
+	
+	
+	private ThreadInfo[]  FindDeadLockThreads() // find if there is deadlock !
+	{
+		ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+		long[] threadIds = bean.findDeadlockedThreads();
+		if (threadIds == null) return null;
+		
+		return 	bean.getThreadInfo(threadIds);
+		
+	}
 
 	public CrawlerRunner CrawlTopUserTarget(IElement headElement ,ECrawlingType crawlType)
 	{
@@ -118,20 +129,30 @@ public class ACrawlerProcessor extends CommonCBase
 		
 		if(CrawlerRunner.activeCount() <= m_maxThread)
 		{
-			String NextTarget =  QueueCrawlinTargets.GetInstance().GetNextTarget();
-			if (NextTarget!=""&& NextTarget!=null)
+			ThreadInfo[] threadsData  = FindDeadLockThreads();
+			if (threadsData != null)
 			{
-				Object[] params = {NextTarget};
-				WriteLineToLog("users left to crawled=" + QueueCrawlinTargets.GetInstance().NumbertOfTargets(), ELogLevel.INFORMATION);
-				runner = new CrawlerRunner(m_crawlerFactory.GenerateCrawler(crawlType, params), m_depthbehavior.get(crawlType),new String(NextTarget));
-				runner.SetHeadElement(headElement);
-				String runMsg = " execute Runner:# " + runner.getId()+" for Target="+NextTarget;
-				WriteLineToLog(runMsg, ELogLevel.INFORMATION);
-				WriteToConsole(runMsg);
-				CrawledCount++;
-				runner.start();
+				for(ThreadInfo ti :threadsData )
+				{
+					WriteToConsole("need to kill this thread... thread in deadlock " + ti.toString()); 
+				}
 			}
-				
+			else
+			{
+				String NextTarget =  QueueCrawlinTargets.GetInstance().GetNextTarget();
+				if (NextTarget != "" && NextTarget != null)
+				{
+					Object[] params = {NextTarget};
+					WriteLineToLog("users left to crawled=" + QueueCrawlinTargets.GetInstance().NumbertOfTargets(), ELogLevel.INFORMATION);
+					runner = new CrawlerRunner(m_crawlerFactory.GenerateCrawler(crawlType, params), m_depthbehavior.get(crawlType),new String(NextTarget));
+					runner.SetHeadElement(headElement);
+					String runMsg = " execute Runner:# " + runner.getId()+" for Target="+NextTarget;
+					WriteLineToLog(runMsg, ELogLevel.INFORMATION);
+					WriteToConsole(runMsg);
+					CrawledCount++;
+					runner.start();
+				}
+			}	
 		}
 		return runner;
 	}

@@ -7,7 +7,7 @@ public class CoreContext
 	
 	protected static ACrawlerProcessor m_processor;
 	
-	public final static String CORE_VERSION = "1.1.0.3";
+	public final static String CORE_VERSION = "1.1.2.0";
 	public final static String ROOT_DATA_FOLDER = "data/";
 	
 	public final static String EMPTY="";
@@ -20,6 +20,8 @@ public class CoreContext
 	public final static String NEO_WEIGHT = "weight";	
 	public static boolean SET_GRAPH = false;
 	public static String VISIT_NAME = "visited.txt";
+	
+	public static boolean DB_MEMORY_MODE = false;
 	//////////////////////////////////////////////////////////////////////
 	//running configuration 
 	public static int MAX_RUNNERS = 3;

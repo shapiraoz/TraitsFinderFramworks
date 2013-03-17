@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import Core.Interfaces.ICrawler;
 import Elements.IElement;
-import Services.FileServices;
+
 
 public class CrawlerRunner extends Thread
 {
@@ -85,7 +85,7 @@ public class CrawlerRunner extends Thread
 				}
 				
 				try {
-					if (!m_writeLockObj.tryLock(8, TimeUnit.SECONDS))
+					if (!m_writeLockObj.tryLock(3, TimeUnit.SECONDS))
 					{
 						return ;
 					}

@@ -1,8 +1,6 @@
 package Core.Crawlers;
 
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import Core.CommonCBase;
 import Core.CoreContext;
@@ -18,7 +16,6 @@ public class ACrawler  extends CommonCBase
 	protected ICollector m_collector;
 	protected Random m_randomGenerator; 
 	final static int SEC = 1000;
-	
 	
 	public ACrawler()
 	{
@@ -38,14 +35,13 @@ public class ACrawler  extends CommonCBase
 		return  m_collector.SaveDataFile(filePath, UrlPath);
 	}
 	
-	@SuppressWarnings("deprecation")
 	protected boolean DownloadFile(String filePath,String UrlPath) throws InterruptedException
 	{
 		
 		boolean fileExist = FileServices.PathExist(filePath);
 		if (fileExist && FileServices.NumberDaysFileNotModified(filePath) < 80)
 		{
-			WriteLineToLog("don't need to download file allready exist...",ELogLevel.VERBOS);
+			WriteLineToLog("don't need to download "+filePath +"file allready exist...",ELogLevel.INFORMATION);
 			return true;
 		}
 		if (fileExist)
@@ -70,25 +66,20 @@ public class ACrawler  extends CommonCBase
 		WgetCollectorExecutors collectorExecutors = new WgetCollectorExecutors(UrlPath, filePath);
 		Thread collectorThread = new Thread(collectorExecutors);
 		collectorThread.start();
-		try {
-			collectorThread.join(CoreContext.COLLECTOR_TIME_OUT_SEC*1000);
+		try 
+		{
+			collectorThread.join(CoreContext.COLLECTOR_TIME_OUT_SEC * 1000);
+			
 		} catch (InterruptedException e) {
 			WriteLineToLog("problem with stoping thread ...", ELogLevel.ERROR);
 		}
-		if (collectorThread.isAlive())
+		if (collectorThread.isAlive() && !collectorThread.isInterrupted() )
 		{
 			WriteLineToLog("collector thread is still alive going to interrupt it ", ELogLevel.WARNING);
 			collectorThread.interrupt();
-			if(collectorThread.isAlive()) 
-				{
-					Thread.sleep(5000);
-					collectorThread.stop();
-					
-				}
+			
 		}
 		return collectorExecutors.GetResult();
-		
-		
 	}
 		
 		//TimeoutCollectorExecutors collectorExecutors = new TimeoutCollectorExecutors(m_collector, filePath, UrlPath);
