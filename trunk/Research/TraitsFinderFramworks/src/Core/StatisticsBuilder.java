@@ -16,7 +16,7 @@ import Services.Log.ELogLevel;
 public class StatisticsBuilder extends CommonCBase
 {
 	
-	
+		
 	protected Map<String,List<String>> m_subTargetTargetDB;
 	protected Map<String,List<String>> m_TargetToSubTargetDB;
 	protected Map<EProperty,List<IElement>> m_commonProperties;
@@ -25,20 +25,9 @@ public class StatisticsBuilder extends CommonCBase
 	
 	private final int TIME_TO_WAIT_SEC = 2;
 	
-	protected static StatisticsBuilder m_instance;
+	public  StatisticsBuilder m_instance;
 	
-	
-	
-	public static StatisticsBuilder GetInstance()
-	{
-		if (m_instance == null) 
-		{
-			m_instance = new StatisticsBuilder();
-		}
-		return m_instance;
-	}
-	
-	private StatisticsBuilder()
+	public StatisticsBuilder()
 	{
 		//						 //Static item , list of frequent to this item (targets)
 		m_subTargetTargetDB = new HashMap<String, List<String>>();
