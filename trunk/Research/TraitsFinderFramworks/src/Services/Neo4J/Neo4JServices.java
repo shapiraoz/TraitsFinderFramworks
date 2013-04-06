@@ -130,7 +130,7 @@ public class Neo4JServices extends CommonCBase
 	
 	public Relationship AddRelasion(IElement elm1 ,IElement elm2, RelationshipType relType)
 	{
-		Relationship relReturn ;
+		Relationship relReturn =null;
 		Transaction tx =null;
 		try
 		{
@@ -153,13 +153,16 @@ public class Neo4JServices extends CommonCBase
 				WriteLineToLog("new relation between : " +elm1Node.getProperty(EProperty.name.toString())+ " to " +elm2Node.getProperty(EProperty.name.toString())+" created reltype=" +relType.toString(),ELogLevel.INFORMATION );
 				tx.finish();
 			}
-			return relReturn;
+			
 		}
-		finally 
+		catch(Exception ex )
 		{
+			WriteLineToLog("transaction failed... failed to create relation between "+elm1.GetName() + " to " + elm2.GetName() + "exception = " +ex.getMessage(), ELogLevel.ERROR);
 			if (tx!=null) tx.finish();
-			//return null;
 		}
+		
+		return relReturn;
+
 	}
 		
 	
