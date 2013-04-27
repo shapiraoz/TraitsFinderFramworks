@@ -1,32 +1,36 @@
 package Elements;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 import Core.CommonCBase;
 import Core.Serialization.IElementSerializer;
 import Elements.IElement;
+import Services.Log.ELogLevel;
 
-public abstract class AElement  extends CommonCBase{
+public abstract class AElement  extends CommonCBase implements Serializable{
 
 	protected List<IElement> m_elements;
 	
-	protected IElementSerializer m_serializer;
+	protected List<IElementSerializer> m_serializerList;
 	
 	protected String m_name;
 	
 	public AElement()
 	{
 		m_elements = new LinkedList<IElement>();
+		m_serializerList = new LinkedList<IElementSerializer>();
 	}
 	
 	public AElement(String elementName )
 	{
 		m_elements = new LinkedList<IElement>();
+		m_serializerList = new LinkedList<IElementSerializer>();
 		m_name = elementName;
 	}
 	
-	public void SetSerializer(IElementSerializer serializer) { m_serializer = serializer;	}
+	public void AddSerializer(IElementSerializer serializer) { m_serializerList.add(serializer);	}
 	
 	public void SetName(String elementName) {	m_name = elementName;}
 	
@@ -44,5 +48,36 @@ public abstract class AElement  extends CommonCBase{
 		
 	}
 	
+	protected void ActivateSerialiers()
+	{
+		//move to AElement !!
+				if (m_serializerList.size() == 0)
+				{
+					WriteLineToLog("no serializer for saving process ", ELogLevel.ERROR);
+					return ;
+				}
+				else
+				{
+					for (IElementSerializer serializer : m_serializerList)
+					{
+						serializer.Save();
+					}
+				}
+	}
+	
+	protected void ActivateLinker(IElement element)
+	{
+		if (m_serializerList.size()==0)
+		{
+			WriteLineToLog("no serializers for linking process",ELogLevel.ERROR);
+			return;
+		}
+		
+		for (IElementSerializer serializer : m_serializerList)
+		{
+			serializer.Link(element);
+		}
+	}
+		
 	
 }

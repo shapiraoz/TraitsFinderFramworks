@@ -10,7 +10,7 @@ public interface IElement
 	List<IElement> GetElements();
 	void AddElement(IElement element);
 	void AddProperty(String ProperyDef,Object ProperyData);
-	void SetSerializer(IElementSerializer serializer);
+	void AddSerializer(IElementSerializer serializer);
 	void SetName(String elementName);
 	Map GetProperties();
 	void Serialize();

@@ -44,7 +44,9 @@ public class OffLineUsersCrawler extends ACrawler implements ICrawler{
 		
 		IElement mainElement = null;
 		String dir = m_userPath;
-	
+		
+		
+		
 		File folder = new File(dir);
 		File[] listOfFiles = folder.listFiles();
 		
@@ -70,7 +72,8 @@ public class OffLineUsersCrawler extends ACrawler implements ICrawler{
 
 	@Override
 	public boolean SaveItem() {
-		// TODO Auto-generated method stub
+		// 
+
 		return false;
 	}
 

@@ -6,6 +6,6 @@ public interface IElementSerializer
 {
 	boolean Save();
 	boolean Link(IElement elemet);
-	IElementSerializer Load();
+	IElement Load();
 	boolean Close();
 }
