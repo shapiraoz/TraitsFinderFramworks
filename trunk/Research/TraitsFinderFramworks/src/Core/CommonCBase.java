@@ -1,9 +1,11 @@
 package Core;
 
+import java.io.Serializable;
+
 import Services.Log.ELogLevel;
 import Services.Log.Logger;
 
-public abstract class CommonCBase 
+public abstract class CommonCBase implements Serializable
 {
 	protected String GetClassName()
 	{

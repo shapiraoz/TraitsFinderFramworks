@@ -1,5 +1,6 @@
 package Services;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Set;
 
 
 
-public class GenericDictionary<T>  implements IDictionary<T>
+public class GenericDictionary<T>  implements IDictionary<T> ,Serializable
 {
 
 	Map<String,T> m_item ;

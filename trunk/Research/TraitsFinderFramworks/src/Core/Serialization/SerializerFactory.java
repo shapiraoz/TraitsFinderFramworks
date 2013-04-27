@@ -22,12 +22,14 @@ public class SerializerFactory
 	}
 	
 			
-	public IElementSerializer GetSerializer(ESerializerType type,IElement element,String SerializerProperties)
+	public IElementSerializer AllocateSerializer(ESerializerType type,IElement element,String SerializerProperties)
 	{
 		switch (type) 
 		{
 		case eNeo4J:
 			return new Neo4JSerializer(element,SerializerProperties);
+		case eElemnetObj :
+			return new ElementObjectSerializer(element , SerializerProperties);
 		default:
 			return null;
 			

@@ -7,7 +7,7 @@ public class CoreContext
 	
 	protected static ACrawlerProcessor m_processor;
 	
-	public final static String CORE_VERSION = "1.1.2.0";
+	public final static String CORE_VERSION = "1.1.3.1";
 	public final static String ROOT_DATA_FOLDER = "data/";
 	
 	public final static String EMPTY="";

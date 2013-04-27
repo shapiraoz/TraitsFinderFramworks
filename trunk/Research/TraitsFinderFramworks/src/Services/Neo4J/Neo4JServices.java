@@ -43,12 +43,21 @@ public class Neo4JServices extends CommonCBase
 	
 	public long CreateNode(IElement element)
 	{
+		return CreateNode(element,true);
+	}
+	
+	public long CreateNode(IElement element ,boolean enableTx)
+	{
 		Node tempNode ;
 		if (m_services ==null) {
-			WriteLineToLog("no Neo4j serives",ELogLevel.ERROR);
+			WriteLineToLog("no Neo4j servies",ELogLevel.ERROR);
 			return 0;
 		}
-		Transaction tx = m_services.beginTx();
+		Transaction tx  = null;
+		if (enableTx) 
+		{
+				tx = m_services.beginTx();
+		}
 		try
         {
 			String name = element.GetProperty(EProperty.name.toString()).toString();
@@ -72,16 +81,16 @@ public class Neo4JServices extends CommonCBase
 				tempNode.setProperty(pair.getKey().toString(), pair.getValue().toString());
 				WriteLineToLog("add prop to node: propkey="+ pair.getKey().toString()+" propvalue= " +pair.getValue().toString(), ELogLevel.INFORMATION);
 			}
-			tx.success();
+			if (enableTx)	tx.success();
 			
         }
 		catch(Exception ex)
 		{
 			WriteLineToLog("transaction failed:" +ex.getMessage(), ELogLevel.ERROR);
-			tx.finish();
+			if (enableTx && tx!=null) tx.finish();
 			return 0;
 		}
-		tx.finish();
+		if (enableTx) tx.finish();
          
 		return tempNode.getId();
 		
@@ -128,7 +137,13 @@ public class Neo4JServices extends CommonCBase
 		return  engine.execute( query);
 	}
 	
+	
 	public Relationship AddRelasion(IElement elm1 ,IElement elm2, RelationshipType relType)
+	{
+		return  AddRelasion(elm1,elm2,relType,true);
+	}
+	
+	public Relationship AddRelasion(IElement elm1 ,IElement elm2, RelationshipType relType,boolean enableTx)
 	{
 		Relationship relReturn =null;
 		Transaction tx =null;
@@ -147,26 +162,31 @@ public class Neo4JServices extends CommonCBase
 			while(false);
 			if (relReturn == null)
 			{
-				tx = m_services.beginTx();
+				if (enableTx) tx = m_services.beginTx();
 				relReturn =  elm1Node.createRelationshipTo(elm2Node,relType);
 				tx.success();
 				WriteLineToLog("new relation between : " +elm1Node.getProperty(EProperty.name.toString())+ " to " +elm2Node.getProperty(EProperty.name.toString())+" created reltype=" +relType.toString(),ELogLevel.INFORMATION );
-				tx.finish();
+				
+				if (enableTx) 	tx.finish();
 			}
 			
 		}
 		catch(Exception ex )
 		{
 			WriteLineToLog("transaction failed... failed to create relation between "+elm1.GetName() + " to " + elm2.GetName() + "exception = " +ex.getMessage(), ELogLevel.ERROR);
-			if (tx!=null) tx.finish();
+			if (tx!=null && enableTx) tx.finish();
 		}
 		
 		return relReturn;
 
 	}
 		
+	public boolean AddWeightRelasion(IElement elm1 ,IElement elm2 )
+	{
+		return AddWeightRelasion(elm1,elm2,true);
+	}
 	
-	public boolean AddWeightRelasion(IElement elm1 ,IElement elm2)
+	public boolean AddWeightRelasion(IElement elm1 ,IElement elm2,boolean enableTx)
 	{
 		Relationship rel =  AddRelasion(elm1, elm2, RelType.Weight);
 		if (rel == null) 
@@ -175,7 +195,11 @@ public class Neo4JServices extends CommonCBase
 				return false;
 		}
 		boolean status = false;
-		Transaction tx = m_services.beginTx();
+		Transaction tx = null;
+		if(enableTx)	
+			{
+				tx =  m_services.beginTx();
+			}
 		try
 		{
 			if (!rel.hasProperty(CoreContext.NEO_WEIGHT))
@@ -192,14 +216,18 @@ public class Neo4JServices extends CommonCBase
 				WriteLineToLog("weight increased to "+count ,ELogLevel.INFORMATION);
 			}
 			status = true;
-			tx.success();
-			tx.finish();
+			if (enableTx)
+			{
+				tx.success();
+				tx.finish();
+			}
+			
 			return status;
 		}
 		catch(Exception e)
 		{
 			WriteToLog("error occur msg=" +e.getMessage(), ELogLevel.ERROR);
-			tx.finish();
+			if (tx!=null && enableTx) tx.finish();
 			return false;
 		}
 	}

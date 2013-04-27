@@ -40,12 +40,7 @@ public class StringDataElement extends AElement implements IElement {
 		m_properties.AddItem(ProperyDef,  ProperyData.toString());
 	}
 
-	
-	public void SetSerializer(IElementSerializer serializer)
-	{
-		m_serializer = serializer;
-	}
-	
+		
 	public void SetProperty(String ProperyDef, String ProperyData)
 	{
 		super.SetProperty(ProperyDef, ProperyData);
@@ -70,16 +65,32 @@ public class StringDataElement extends AElement implements IElement {
 		return m_properties.ToMap();
 	}
 
+	
+
 	@Override
-	public void Serialize() {
-		// TODO Auto-generated method stub
+	public void Link(IElement elment) {
+		super.ActivateLinker(elment);
 		
 	}
 
 	@Override
-	public void Link(IElement elment) {
-		// TODO Auto-generated method stub
-		
+	public void Serialize() {
+		//move to AElement !!
+		/*
+				if (m_serializerList.size() == 0)
+				{
+					WriteLineToLog("no serializer for saving process ", ELogLevel.ERROR);
+					return ;
+				}
+				else
+				{
+					for (IElementSerializer serializer : m_serializerList)
+					{
+						serializer.Save();
+					}
+				}
+		*/
+		super.ActivateSerialiers();
 	}
 
 	

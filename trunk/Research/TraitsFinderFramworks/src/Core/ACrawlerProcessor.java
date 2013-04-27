@@ -73,7 +73,7 @@ public class ACrawlerProcessor extends CommonCBase
 					WriteToConsole("queue exist with " + QueueCrawlinTargets.GetInstance().NumbertOfTargets() +" objects are waiting to crawl...");
 				}
 				WriteLineToLog("count ="+crawled,ELogLevel.INFORMATION);
-				if (CoreContext.SET_GRAPH && crawled %100 == 0)
+				if (CoreContext.SET_GRAPH && crawled %100 == 0) //TODO need to change this 
 				{
 					String msg = String.format("graph updated with %d objects",crawled);
 					WriteLineToLog(msg,ELogLevel.INFORMATION);
@@ -118,7 +118,7 @@ public class ACrawlerProcessor extends CommonCBase
 				IElement elm = crawler.Crawl(m_depthbehavior.get(crawlType));
 				if (elm != null)
 				{
-					if (CoreContext.SET_GRAPH) elm.Serialize();
+					elm.Serialize(); 
 					headElement.AddElement(elm);
 					return runner;
 				}

@@ -14,7 +14,7 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 	//private Neo4JActivation m_DBActivation;
 	
 	private Neo4JServices m_neoServies ;
-	
+	//private boolean m_enableTx; //TODO:: check if this the solution  
 	public Neo4JSerializer(IElement element,String dbDir)
 	{
 		super(element);
@@ -50,6 +50,11 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 	@Override
 	public boolean Save()
 	{
+		if (m_neoServies==null)
+		{
+			WriteLineToLog("neo4jService is null", ELogLevel.ERROR);
+			return false;
+		}
 		return  (m_neoServies.CreateNode(m_element)!=0);
 	}
 
@@ -74,7 +79,7 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 
 
 	@Override
-	public IElementSerializer Load() {
+	public IElement Load() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -43,7 +43,10 @@ public class test extends CommonCBase {
 		String s1[] = s.split("/");
 		System.out.println(s1[2]);
 		assertTrue(s1[2].compareTo("been-there")==0);
-		
+		String s2 =null;
+		javaTests t1 = new javaTests();
+		t1.SetName(s2);
+		System.out.println(s2);
 	}
 	
 
