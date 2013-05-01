@@ -14,6 +14,7 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 	//private Neo4JActivation m_DBActivation;
 	
 	private Neo4JServices m_neoServies ;
+	private boolean m_isTxWasEnabled = false;
 	//private boolean m_enableTx; //TODO:: check if this the solution  
 	public Neo4JSerializer(IElement element,String dbDir)
 	{
@@ -48,14 +49,14 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 	
 
 	@Override
-	public boolean Save()
+	public boolean Save(boolean close)
 	{
 		if (m_neoServies==null)
 		{
 			WriteLineToLog("neo4jService is null", ELogLevel.ERROR);
 			return false;
 		}
-		return  (m_neoServies.CreateNode(m_element)!=0);
+		return  (m_neoServies.CreateNode(m_element,close)!=0);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 			WriteLineToLog("no neo4j services ", ELogLevel.ERROR);
 			return false;
 		}
-		return  m_neoServies.AddWeightRelasion(m_element,elemet) ;
+		return  m_neoServies.AddWeightRelasion(m_element,elemet,m_isTxWasEnabled) ;
 	
 	}
 
@@ -87,14 +88,44 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 
 
 	@Override
-	public boolean Close() {
-		if (Neo4JActivation.IsActive())
+	public boolean Close() 
+	{
+		if (m_neoServies!= null)  return m_neoServies.CloseTx();
+		/*if (Neo4JActivation.IsActive())
 		{
 			return Neo4JActivation.Stop();
+		}
+		*/
+		return false;
+	}
+
+	@Override
+	public boolean Save() 
+	{
+		m_isTxWasEnabled = true;
+		return Save(true);
+	}
+
+
+
+	@Override
+	public boolean Open()
+	{
+		if (m_neoServies!= null)
+		{
+			return m_neoServies.StartTx();
 		}
 		return false;
 	}
 
-	
 
+/*
+	@Override
+	public boolean Open()
+	{
+
+
+		return false;
+	}
+*/
 }

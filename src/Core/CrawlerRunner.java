@@ -79,10 +79,8 @@ public class CrawlerRunner extends Thread
 			IElement elm = m_crawler.Crawl(m_recursive);
 			if (elm!=null && m_headElement!=null)
 			{
-				if (CoreContext.SET_GRAPH) 
-				{
-					elm.Serialize(); //write to graph 
-				}
+				elm.Serialize();
+				
 				
 				try {
 					if (!m_writeLockObj.tryLock(3, TimeUnit.SECONDS))

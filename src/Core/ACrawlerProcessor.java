@@ -105,13 +105,17 @@ public class ACrawlerProcessor extends CommonCBase
 	public CrawlerRunner CrawlTopUserTarget(IElement headElement ,ECrawlingType crawlType)
 	{
 		CrawlerRunner runner = null;
-			
+		int targetNum =0;	
 	//	WriteLineToLog("activeCount= "+CrawlerRunner.activeCount(),ELogLevel.INFORMATION);
 		if (m_maxThread == 1)
 		{
 			String NextTarget =  QueueCrawlinTargets.GetInstance().GetNextTarget();
 			if (NextTarget !="" && NextTarget != null )	//TODO::why this again...
-			{
+			{ 
+				
+				String msg = ++targetNum +  ") crawl target : " +NextTarget ; 
+				WriteToConsole(msg);
+				WriteToLog(msg, ELogLevel.INFORMATION);
 				Object[] params = {NextTarget};
 				ICrawler crawler  = m_crawlerFactory.GenerateCrawler(crawlType, params);
 				//IElement userElm = new UserCrawler(userName).Crawl(m_depthbehavior.get(ECrawlingType.User));
@@ -120,6 +124,8 @@ public class ACrawlerProcessor extends CommonCBase
 				{
 					elm.Serialize(); 
 					headElement.AddElement(elm);
+					msg= "finish serialize " +elm.GetName() + " elemnet!" ;
+					WriteToConsole(msg);
 					return runner;
 				}
 				WriteLineToLog("failed to create user element",ELogLevel.ERROR);
