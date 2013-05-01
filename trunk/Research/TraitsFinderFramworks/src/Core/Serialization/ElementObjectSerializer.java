@@ -1,6 +1,7 @@
 package Core.Serialization;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,26 +17,30 @@ public class ElementObjectSerializer extends CommonCBase implements IElementSeri
 {
 
 	
+
 	public ElementObjectSerializer(IElement element , String filePath)
 	{
 		
 		m_filePath = filePath;
 		m_element = element;
-	 
+		m_fos = null;
+		m_outSerilazer = null;
+		 
 	}
 	
 	@Override
-	public boolean Save() 
+	public boolean Save(boolean close ) 
 	{
-		FileOutputStream fos = null;
-		ObjectOutputStream serilazer = null;
 		try
 		{
+			
 			if (FileServices.PathExist(m_filePath))
 			{
 				WriteLineToLog("the file " +m_filePath +"is exist will replaced!!!", ELogLevel.WARNING);
 				FileServices.DeleteFile(GetClassName(), m_filePath); 
 			}
+			
+			Open(); // open for write
 			
 			if (m_element == null) 
 			{
@@ -43,28 +48,19 @@ public class ElementObjectSerializer extends CommonCBase implements IElementSeri
 				return false;
 			}
 			WriteLineToLog("going to serilize " + m_element.GetName() + "elemnet", ELogLevel.INFORMATION);			
-			fos = new FileOutputStream(m_filePath);
-			serilazer = new ObjectOutputStream(fos);
-			serilazer.writeObject(m_element);
-			fos.close();
-			serilazer.close();
+		    m_outSerilazer.writeObject(m_element);
+			if (close)
+			{
+				m_fos.close();
+				m_outSerilazer.close();
+			}
 			return true;
 		}
 		catch(Exception ex)
 		{
 			WriteLineToLog("Exception on element serialzer msg=" + ex.getMessage(), ELogLevel.ERROR);
-			if (fos != null)
-			{
-				try { fos.close(); }
-				catch (IOException e) {}
-			}
-			if (serilazer != null)
-			{
-				try { serilazer.close();}
-				catch (IOException e) {}
-			}
+			if (close) Close();
 		}
-		
 		return false;
 	}
 
@@ -77,12 +73,7 @@ public class ElementObjectSerializer extends CommonCBase implements IElementSeri
 	@Override
 	public IElement Load()
 	{
-		if (!FileServices.PathExist(m_filePath)) 
-		{
-			WriteLineToLog("the file " + m_filePath + " not exist !!! will exit", ELogLevel.ERROR);
-			return null;
-		}
-		
+				
 		if (m_element != null) 
 		{
 			WriteLineToLog("m_element is not null will replace values!!!",ELogLevel.WARNING );
@@ -123,13 +114,52 @@ public class ElementObjectSerializer extends CommonCBase implements IElementSeri
 
 	@Override
 	public boolean Close() {
-		// TODO Auto-generated method stub
-		return false;
+		if (m_fos != null )
+		{
+			try { m_fos.close(); }
+			catch (IOException e) {}
+		}
+		if (m_outSerilazer != null)
+		{
+			try { m_outSerilazer.close();}
+			catch (IOException e) {}
+		}
+		return true;
 	}
 	
 	
 	protected String m_filePath;
 	protected IElement m_element;
+	protected FileOutputStream m_fos = null;
+	
+	protected ObjectOutputStream m_outSerilazer = null;
+	@Override
+	public boolean Save() {
+		
+		return Save(true);
+	}
+
+	@Override
+	public boolean Open()
+	{
+		try
+		{
+			if (!FileServices.PathExist(m_filePath)) 
+			{
+				WriteLineToLog("the file " + m_filePath + " not exist !!! will exit", ELogLevel.ERROR);
+				
+			}
+			m_fos = new FileOutputStream(m_filePath);
+			m_outSerilazer = new ObjectOutputStream(m_fos);
+			return true;
+		}
+		catch (Exception e) 
+		{
+			WriteLineToLog("Exception!! fail to open seriaizers msg="+e.getMessage(), ELogLevel.ERROR);
+		}
+		
+		return false;
+	}
 
 }
 

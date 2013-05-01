@@ -21,14 +21,12 @@ public class Neo4JActivation
 	private static Map<String,String> m_config ;
 	
 	
-	
 	public GraphDatabaseService GetGraphDatabaseService()
 	{
 		//GetInstance();
 		return m_DBservice;
 	}
 	
-		
 	public static Neo4JActivation GetInstance()
 	{
 		if (m_instance == null)

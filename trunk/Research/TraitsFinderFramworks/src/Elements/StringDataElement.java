@@ -90,7 +90,7 @@ public class StringDataElement extends AElement implements IElement {
 					}
 				}
 		*/
-		super.ActivateSerialiers();
+		super.ActivateSerialiers(true);
 	}
 
 	

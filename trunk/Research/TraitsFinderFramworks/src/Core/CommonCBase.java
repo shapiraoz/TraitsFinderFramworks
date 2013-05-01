@@ -13,6 +13,7 @@ public abstract class CommonCBase implements Serializable
 		return  "" +Thread.currentThread().getId() +":" +m_Name;
 	}
 	
+			
 	protected  void WriteLineToLog(String msg,ELogLevel logLevel)
 	{
 		Logger.GetLogger().WriteLine(GetClassName(),  msg,logLevel);

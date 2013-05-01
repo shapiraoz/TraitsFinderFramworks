@@ -4,8 +4,10 @@ import Elements.IElement;
 
 public interface IElementSerializer
 {
+	boolean Open(); // just open to write
 	boolean Save();
+	boolean Save(boolean close);
 	boolean Link(IElement elemet);
 	IElement Load();
-	boolean Close();
+	boolean Close(); //close to write
 }

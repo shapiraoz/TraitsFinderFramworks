@@ -29,8 +29,9 @@ import Services.Log.ELogLevel;
 public class Neo4JServices extends CommonCBase 
 {
 	
-	GraphDatabaseService m_services;
-	private Index<Node> m_indexNode;
+	protected GraphDatabaseService m_services;
+	protected Index<Node> m_indexNode;
+	protected Transaction m_tx;
 	//private Index<Relationship> m_indexRelation; 
 			
 	public Neo4JServices(GraphDatabaseService service)
@@ -38,6 +39,7 @@ public class Neo4JServices extends CommonCBase
 		
 			m_services = service;
 			m_indexNode =  m_services.index().forNodes(EProperty.name.toString());
+			m_tx = null;
 			//m_indexRelation = m_services.index().forRelationships(RelType.Users.toString());
 	}
 	
@@ -45,18 +47,18 @@ public class Neo4JServices extends CommonCBase
 	{
 		return CreateNode(element,true);
 	}
-	
+			
 	public long CreateNode(IElement element ,boolean enableTx)
 	{
 		Node tempNode ;
+		boolean ret = false;
 		if (m_services ==null) {
 			WriteLineToLog("no Neo4j servies",ELogLevel.ERROR);
 			return 0;
 		}
-		Transaction tx  = null;
 		if (enableTx) 
 		{
-				tx = m_services.beginTx();
+			StartTx();
 		}
 		try
         {
@@ -81,19 +83,43 @@ public class Neo4JServices extends CommonCBase
 				tempNode.setProperty(pair.getKey().toString(), pair.getValue().toString());
 				WriteLineToLog("add prop to node: propkey="+ pair.getKey().toString()+" propvalue= " +pair.getValue().toString(), ELogLevel.INFORMATION);
 			}
-			if (enableTx)	tx.success();
+			if (enableTx) 
+			{
+				if (! CloseTx())
+				{
+					WriteLineToLog("Error, failed to close transction", ELogLevel.ERROR);
+				}
+			}
 			
         }
-		catch(Exception ex)
+		catch(Exception ex )
 		{
 			WriteLineToLog("transaction failed:" +ex.getMessage(), ELogLevel.ERROR);
-			if (enableTx && tx!=null) tx.finish();
+			if (enableTx && m_tx!=null) m_tx.finish();
 			return 0;
 		}
-		if (enableTx) tx.finish();
+		
          
+			
 		return tempNode.getId();
 		
+	}
+	
+	public boolean StartTx()
+	{
+		m_tx = m_services.beginTx();
+		return true;
+	}
+	
+	public boolean CloseTx()
+	{
+		if (m_tx != null)
+		{
+			m_tx.success();
+			m_tx.finish();
+			return true;
+		}
+		return false;
 	}
 	
 	public long GetNodeElementId(IElement element)
@@ -146,7 +172,6 @@ public class Neo4JServices extends CommonCBase
 	public Relationship AddRelasion(IElement elm1 ,IElement elm2, RelationshipType relType,boolean enableTx)
 	{
 		Relationship relReturn =null;
-		Transaction tx =null;
 		try
 		{
 			Node elm1Node = m_indexNode.get(EProperty.name.toString(), elm1.GetName()).getSingle();
@@ -162,19 +187,18 @@ public class Neo4JServices extends CommonCBase
 			while(false);
 			if (relReturn == null)
 			{
-				if (enableTx) tx = m_services.beginTx();
+				if (enableTx) StartTx();
 				relReturn =  elm1Node.createRelationshipTo(elm2Node,relType);
-				tx.success();
 				WriteLineToLog("new relation between : " +elm1Node.getProperty(EProperty.name.toString())+ " to " +elm2Node.getProperty(EProperty.name.toString())+" created reltype=" +relType.toString(),ELogLevel.INFORMATION );
 				
-				if (enableTx) 	tx.finish();
+				if (enableTx) CloseTx();
 			}
 			
 		}
 		catch(Exception ex )
 		{
 			WriteLineToLog("transaction failed... failed to create relation between "+elm1.GetName() + " to " + elm2.GetName() + "exception = " +ex.getMessage(), ELogLevel.ERROR);
-			if (tx!=null && enableTx) tx.finish();
+			if (m_tx!=null && enableTx) m_tx.finish();
 		}
 		
 		return relReturn;
@@ -195,11 +219,8 @@ public class Neo4JServices extends CommonCBase
 				return false;
 		}
 		boolean status = false;
-		Transaction tx = null;
-		if(enableTx)	
-			{
-				tx =  m_services.beginTx();
-			}
+		if(enableTx) StartTx();	
+			
 		try
 		{
 			if (!rel.hasProperty(CoreContext.NEO_WEIGHT))
@@ -216,18 +237,15 @@ public class Neo4JServices extends CommonCBase
 				WriteLineToLog("weight increased to "+count ,ELogLevel.INFORMATION);
 			}
 			status = true;
-			if (enableTx)
-			{
-				tx.success();
-				tx.finish();
-			}
+			if (enableTx) CloseTx();
+			
 			
 			return status;
 		}
 		catch(Exception e)
 		{
 			WriteToLog("error occur msg=" +e.getMessage(), ELogLevel.ERROR);
-			if (tx!=null && enableTx) tx.finish();
+			if (m_tx!=null && enableTx) m_tx.finish();
 			return false;
 		}
 	}
