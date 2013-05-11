@@ -37,9 +37,8 @@ public class ACrawler  extends CommonCBase
 	
 	protected boolean DownloadFile(String filePath,String UrlPath) throws InterruptedException
 	{
-		
 		boolean fileExist = FileServices.PathExist(filePath);
-		if (fileExist && FileServices.NumberDaysFileNotModified(filePath) < 80)
+		if (fileExist && FileServices.NumberDaysFileNotModified(filePath) < 200)
 		{
 			WriteLineToLog("don't need to download "+filePath +"file allready exist...",ELogLevel.INFORMATION);
 			return true;
