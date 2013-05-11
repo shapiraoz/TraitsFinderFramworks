@@ -16,6 +16,10 @@ import Core.CommonCBase;
 public class DomNode extends CommonCBase
 {
 	
+	protected XPathFactory m_factory;
+	protected Node m_node;
+	protected static XPath m_xpath;
+	
 	public  DomNode()
 	{
 		m_node = null;
@@ -34,6 +38,16 @@ public class DomNode extends CommonCBase
 		m_xpath = m_factory.newXPath();
 	}
 	
+	public Node GetNode()
+	{
+		return m_node;
+	}
+	
+	public DomNode GetDomNode()
+	{
+		return new DomNode(GetNode());
+	}
+	
 	public Node GetNode(String path)
 	{
 		try 
@@ -44,6 +58,11 @@ public class DomNode extends CommonCBase
 			PrintError(e);
 			return null;
 		}
+	}
+	
+	public DomNode GetDomNode(String path)
+	{
+		return new DomNode(GetNode(path));
 	}
 	
 	public String GetValue()
@@ -79,8 +98,7 @@ public class DomNode extends CommonCBase
 				WriteLineToLog("error while try to get node " +attribute +" attribute  :  " + e.getMessage(),ELogLevel.ERROR);
 				return "";
 			}
-			
-			
+					
 		}
 	}
 	
@@ -91,6 +109,11 @@ public class DomNode extends CommonCBase
 		{
 			return 	node.getNodeValue();
 		}
+	}
+	
+	public String getValue(DomNode domNode) throws Exception 
+	{
+		return GetValue(domNode.GetNode());
 	}
 	
 	public String GetAttribute(Node node ,String attribute) throws Exception
@@ -107,15 +130,32 @@ public class DomNode extends CommonCBase
 		{
 			//WriteLineToLog("attribute not exist", ELogLevel.WARNING);
 			return "";
-
 		}
 	}
 	
+	public String GetAttribute(DomNode domNode ,String attribute) throws Exception
+	{
+		return GetAttribute(domNode.GetNode(), attribute);
+	}
 	
+	public DomNode GetDomNode(String path,Node node) throws XPathExpressionException
+	{
+		return new DomNode(GetNode(path,node));
+	}
 	
+	public DomNode GetDomNode(String path ,DomNode node) throws XPathExpressionException
+	{
+		return GetDomNode(path,node.GetNode());
+	}
+		
 	public  Node GetNode(String path,Node node) throws XPathExpressionException
 	{
 		return (Node) m_xpath.evaluate(path, node,XPathConstants.NODE);
+	}
+	
+	public Node GetNode(String path , DomNode node) throws XPathExpressionException
+	{
+		return GetNode(path,node.GetNode());
 	}
 	
 	public  Node GetNode(String path,Document doc) throws XPathExpressionException
@@ -123,6 +163,21 @@ public class DomNode extends CommonCBase
 		return (Node) m_xpath.evaluate(path, doc,XPathConstants.NODE);
 	}
 	 
+	public Node GetNode(String path,DomDocument doc) throws XPathExpressionException
+	{
+		return GetNode(path , doc.GetDocument());
+	}
+	
+	public DomNode GetDomNode (String path,DomDocument doc) throws XPathExpressionException
+	{
+		return new DomNode(GetNode(path,doc));
+	}
+	
+	public DomNode GetDomNoe(String path ,Document doc) throws XPathExpressionException
+	{
+		return new DomNode(GetNode(path,doc));
+	}
+	
 	public NodeList GetNodeList(String path)
 	{
 		try
@@ -137,8 +192,7 @@ public class DomNode extends CommonCBase
 	}
 	
 	
-	
-	
+		
 	public  NodeList GetNodeList(String path,Document doc) throws XPathExpressionException
 	{
 		return (NodeList) m_xpath.evaluate(path,doc ,XPathConstants.NODESET);
@@ -148,9 +202,7 @@ public class DomNode extends CommonCBase
 	{
 		return (NodeList) m_xpath.evaluate(path,node ,XPathConstants.NODESET);
 	}
-	
-	
-	
+		
 	private void PrintError(Exception e)
 	{
 		WriteLineToLog("Error: " +e.getMessage(),ELogLevel.ERROR);
@@ -158,8 +210,4 @@ public class DomNode extends CommonCBase
 		
 	}
 	
-	private XPathFactory m_factory;
-	private Node m_node;
-	private static XPath m_xpath;
-
 }

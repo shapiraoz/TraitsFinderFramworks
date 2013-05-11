@@ -54,7 +54,7 @@ public class ACrawler  extends CommonCBase
 			try
 			{
 				int sleepTime = m_randomGenerator.nextInt(3500);
-				WriteLineToLog("going to sleep for: "+sleepTime, ELogLevel.VERBOS);
+				//WriteLineToLog("going to sleep for: "+sleepTime, ELogLevel.VERBOS);
 				Thread.sleep(sleepTime);
 			}
 			catch (InterruptedException e) 

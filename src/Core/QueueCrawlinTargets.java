@@ -46,7 +46,7 @@ public class QueueCrawlinTargets extends CommonCBase implements ICrawlingTargets
 		try
 		{
 			 exist= m_targets.contains(starget);
-			 WriteLineToLog("exist="+exist, ELogLevel.VERBOS);
+			// WriteLineToLog("exist="+exist, ELogLevel.VERBOS);
 			 return exist;
 		}
 		catch (Exception e) 
@@ -63,7 +63,7 @@ public class QueueCrawlinTargets extends CommonCBase implements ICrawlingTargets
 		try
 		{
 			size=  m_targets.size();
-			WriteLineToLog(" size="+size, ELogLevel.VERBOS);
+			//WriteLineToLog(" size="+size, ELogLevel.VERBOS);
 			return size;
 				
 		}
@@ -83,7 +83,7 @@ public class QueueCrawlinTargets extends CommonCBase implements ICrawlingTargets
 		try
 		{
 			nextTarget= m_targets.poll();
-			WriteLineToLog("nextTarget="+nextTarget, ELogLevel.VERBOS);
+			//WriteLineToLog("nextTarget="+nextTarget, ELogLevel.VERBOS);
 			return nextTarget;
 		}
 		catch (Exception e) 
@@ -105,10 +105,10 @@ public class QueueCrawlinTargets extends CommonCBase implements ICrawlingTargets
 					try {
 						if ( m_writeLockObj.tryLock(MAX_LOCK_TRY,TimeUnit.SECONDS))
 						{
-							 WriteLineToLog("AddTarget::success to lock target="+ sTarget, ELogLevel.VERBOS);
+							// WriteLineToLog("AddTarget::success to lock target="+ sTarget, ELogLevel.VERBOS);
 							 if (m_targets.size()<= CoreContext.MAX_NUMBER_IN_Q && !IsExist(sTarget)) m_targets.add(sTarget);
 							 m_writeLockObj.unlock();
-							 WriteLineToLog("unlock", ELogLevel.VERBOS);
+							 //WriteLineToLog("unlock", ELogLevel.VERBOS);
 							 return true;
 						}
 					} catch (InterruptedException e) {
