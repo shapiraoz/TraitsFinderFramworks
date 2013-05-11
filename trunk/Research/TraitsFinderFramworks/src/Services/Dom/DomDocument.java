@@ -66,6 +66,12 @@ public class DomDocument extends CommonCBase
 		return null;
 	}
 	
+	
+	public DomNode GetDomeNode(String xPathStr)
+	{
+		return new DomNode(GetNode(xPathStr));	
+	}
+			
 	public Node GetNode(String xPathStr)
 	{
 		if (m_document != null && m_xpath!=null)

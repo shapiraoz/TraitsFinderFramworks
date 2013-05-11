@@ -1,5 +1,6 @@
 package Core;
 
+import Services.FileServices;
 import Services.Log.ELogLevel;
 
 public class CoreContext 
@@ -7,7 +8,7 @@ public class CoreContext
 	
 	protected static ACrawlerProcessor m_processor;
 	
-	public final static String CORE_VERSION = "1.1.4.1";
+	public final static String CORE_VERSION = "1.1.4.3";
 	public final static String ROOT_DATA_FOLDER = "data/";
 	
 	public final static String EMPTY="";
@@ -30,11 +31,27 @@ public class CoreContext
 	//default log level
 	public static ELogLevel LOGGER_LEVEL = ELogLevel.WARNING;
 	
-	public static int MAX_NUMBER_IN_Q = 60000;  //Integer.MAX_VALUE -2;	
+	public static int MAX_NUMBER_IN_Q = 100000;  //Integer.MAX_VALUE -2;	
 	
 	public static String OFF_LINE_PATH = "OffLine" ;
 	public final static int COLLECTOR_TIME_OUT_SEC = 30;
 	
 	public ACrawlerProcessor GetProcssor() {return null;}
+	///////////////////////////////////////////////////////////////////////
+	
+	public static boolean COLLECT_STATISIC = true;
+	
+	
+	
+	//TODO complete this function 
+	public static boolean LoadContext(String filePath)
+	{
+		boolean res = false;
+		if (!FileServices.PathExist(filePath)) return false;
+				
+		return res;
+	}
+	
+	
 	
 }

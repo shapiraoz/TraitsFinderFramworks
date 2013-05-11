@@ -14,9 +14,9 @@ import java.util.Map;
 
 public class StringDataElement extends AElement implements IElement {
 
+	
 	private GenericDictionary<String> m_properties;
-	
-	
+
 	public StringDataElement()
 	{
 		super();
@@ -93,8 +93,7 @@ public class StringDataElement extends AElement implements IElement {
 		super.ActivateSerialiers(true);
 	}
 
-	
-	
+
 	
 	
 }

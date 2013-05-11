@@ -9,10 +9,7 @@ import Services.Log.ELogLevel;
 
 public class EnumElement  extends AElement 
 {
-	
-	
 	protected Map<EProperty,Object> m_properties ;
-	
 	
 	public EnumElement(String elementName)
 	{
@@ -74,5 +71,4 @@ public class EnumElement  extends AElement
 	}
 
 	
-
 }

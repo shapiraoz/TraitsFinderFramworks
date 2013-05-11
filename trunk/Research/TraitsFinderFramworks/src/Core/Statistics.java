@@ -119,10 +119,10 @@ public class Statistics extends CommonCBase
 			try {
 				if ( m_writeLock.tryLock(TIME_TO_WAIT_SEC,TimeUnit.SECONDS) )
 				{
-					WriteLineToLog("take the lock....", ELogLevel.VERBOS);
+					//WriteLineToLog("take the lock....", ELogLevel.VERBOS);
 					mapDb.get(Key).add(Val);
 					m_writeLock.unlock();
-					WriteLineToLog("unlock key= "+Key +" value="+Val +" have been added!!", ELogLevel.VERBOS);
+					//WriteLineToLog("unlock key= "+Key +" value="+Val +" have been added!!", ELogLevel.VERBOS);
 					return true;
 				}
 			} catch (InterruptedException e)
@@ -139,7 +139,7 @@ public class Statistics extends CommonCBase
 					AddKeyTarget(mapDb, Key);
 					mapDb.get(Key).add(Val);
 					m_writeLock.unlock();
-					WriteLineToLog("unlock key= "+Key +" value="+Val +" have been added!!", ELogLevel.VERBOS);
+					//WriteLineToLog("unlock key= "+Key +" value="+Val +" have been added!!", ELogLevel.VERBOS);
 					return true;
 				}
 			}

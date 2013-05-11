@@ -76,6 +76,9 @@ public class Neo4JServices extends CommonCBase
 				tempNode =  hits.getSingle();
 				WriteLineToLog("found node id:" +tempNode.getId(), ELogLevel.INFORMATION);
 			}
+			
+			
+			
 			Iterator itr =  element.GetProperties().entrySet().iterator();
 			while (itr.hasNext())
 			{
@@ -98,9 +101,6 @@ public class Neo4JServices extends CommonCBase
 			if (enableTx && m_tx!=null) m_tx.finish();
 			return 0;
 		}
-		
-         
-			
 		return tempNode.getId();
 		
 	}
@@ -181,7 +181,7 @@ public class Neo4JServices extends CommonCBase
 			do
 			{
 				relReturn = FindRelation(elm1Node, elm2Node);
-				if (relReturn !=null) break;
+				if (relReturn != null) break;
 				relReturn = FindRelation(elm2Node, elm1Node);
 			}
 			while(false);
@@ -238,8 +238,7 @@ public class Neo4JServices extends CommonCBase
 			}
 			status = true;
 			if (enableTx) CloseTx();
-			
-			
+				
 			return status;
 		}
 		catch(Exception e)
@@ -261,11 +260,7 @@ public class Neo4JServices extends CommonCBase
 		if (nodeId != CoreContext.NOT_EXIST_IN_DB) return GetNodeProperty(nodeId, Property);
 		return "";
 	}
-	
-	
-	
-	
-	
+		
 	
 	
 }
