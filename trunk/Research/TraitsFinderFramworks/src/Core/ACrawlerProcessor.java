@@ -55,23 +55,38 @@ public class ACrawlerProcessor extends CommonCBase
 	}
 	*/
 	
-	
+	public IStatisticsDumper GetDumper()
+	{
+		return null;
+	}
 		
 	public CrawlerRunner[] ExcuteCrawler(IElement headElement,ECrawlingType crawlType, long maxExcution)
 	{
 		long leftUserToCrawl = QueueCrawlinTargets.GetInstance().NumbertOfTargets();
-		WriteLineToLog("NumbertOfTargets="+leftUserToCrawl, ELogLevel.INFORMATION);
+		WriteLineToLog("NumbertOfTargets = " + leftUserToCrawl, ELogLevel.INFORMATION);
 		long crawled = 0;
+		IStatisticsDumper  dumper = GetDumper(); 
 		while (leftUserToCrawl > 0 && crawled < maxExcution)
 		{
-			if (CrawlTopUserTarget(headElement,crawlType)!=null)
+			if (CrawlTopUserTarget(headElement,crawlType)!=null|| CoreContext.MAX_RUNNERS == 1 )
 			{
+				
+				if(crawled %30 == 0 && dumper != null) //TODO change it to ~150 users 
+				{
+					if( !dumper.DumpAllTargetsStatData())
+					{
+						String errMsg = "failed to dump all users statistic Data";
+						WriteLineToLog(errMsg, ELogLevel.ERROR);
+						WriteToConsole(errMsg);
+					}
+				}
+				
 				if (crawled % 50 == 0 && crawled!=0)
 				{
-					
-					WriteToConsole("crawling proceed : " + crawled + "objects have been crawled !!");
+					WriteToConsole("crawling proceed : " + crawled +  "objects have been crawled !!");
 					WriteToConsole("queue exist with " + QueueCrawlinTargets.GetInstance().NumbertOfTargets() +" objects are waiting to crawl...");
 				}
+				
 				WriteLineToLog("count ="+crawled,ELogLevel.INFORMATION);
 				if (CoreContext.SET_GRAPH && crawled %100 == 0) //TODO need to change this 
 				{
@@ -80,8 +95,7 @@ public class ACrawlerProcessor extends CommonCBase
 					WriteToConsole(msg);
 				}
 				crawled++; 
-			}
-			
+			}		
 		}
 		String msg = (crawled == maxExcution )? String.format("crawler end collecting %d users ", crawled) :
 			(leftUserToCrawl == 0) ? "crawler don't have users to crawled , need to restart crawling" : "stop from unknow reason ";
@@ -107,12 +121,12 @@ public class ACrawlerProcessor extends CommonCBase
 		CrawlerRunner runner = null;
 		int targetNum =0;	
 	//	WriteLineToLog("activeCount= "+CrawlerRunner.activeCount(),ELogLevel.INFORMATION);
+		//WriteLineToLog("users left to crawled=" + QueueCrawlinTargets.GetInstance().NumbertOfTargets(), ELogLevel.INFORMATION);
 		if (m_maxThread == 1)
 		{
 			String NextTarget =  QueueCrawlinTargets.GetInstance().GetNextTarget();
 			if (NextTarget !="" && NextTarget != null )	//TODO::why this again...
 			{ 
-				
 				String msg = ++targetNum +  ") crawl target : " +NextTarget ; 
 				WriteToConsole(msg);
 				WriteToLog(msg, ELogLevel.INFORMATION);
@@ -123,9 +137,10 @@ public class ACrawlerProcessor extends CommonCBase
 				if (elm != null)
 				{
 					elm.Serialize(); 
-					headElement.AddElement(elm);
+					//headElement.AddElement(elm); //for improve performance 
 					msg= "finish serialize " +elm.GetName() + " elemnet!" ;
 					WriteToConsole(msg);
+					WriteLineToLog(msg, ELogLevel.INFORMATION);
 					return runner;
 				}
 				WriteLineToLog("failed to create user element",ELogLevel.ERROR);
@@ -140,7 +155,9 @@ public class ACrawlerProcessor extends CommonCBase
 			{
 				for(ThreadInfo ti :threadsData )
 				{
-					WriteToConsole("need to kill this thread... thread in deadlock " + ti.toString()); 
+					String msg = "need to kill this thread... thread in deadlock " + ti.toString();
+					WriteToConsole(msg); 
+					WriteLineToLog(msg, ELogLevel.ERROR);
 				}
 			}
 			else
@@ -149,7 +166,6 @@ public class ACrawlerProcessor extends CommonCBase
 				if (NextTarget != "" && NextTarget != null)
 				{
 					Object[] params = {NextTarget};
-					WriteLineToLog("users left to crawled=" + QueueCrawlinTargets.GetInstance().NumbertOfTargets(), ELogLevel.INFORMATION);
 					runner = new CrawlerRunner(m_crawlerFactory.GenerateCrawler(crawlType, params), m_depthbehavior.get(crawlType),new String(NextTarget));
 					runner.SetHeadElement(headElement);
 					String runMsg = " execute Runner:# " + runner.getId()+" for Target="+NextTarget;

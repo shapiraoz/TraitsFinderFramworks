@@ -161,5 +161,11 @@ public class ElementObjectSerializer extends CommonCBase implements IElementSeri
 		return false;
 	}
 
+	@Override
+	public boolean Close(boolean success) {
+		
+		return true;
+	}
+
 }
 

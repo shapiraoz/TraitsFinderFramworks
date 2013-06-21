@@ -12,8 +12,7 @@ public class CSVBuilder extends CommonCBase
 		{
 			FileServices.DeleteFile(GetClassName(), m_filePath);
 		}
-		
-		
+			
 		m_numColmn = 0;
 	}
 	

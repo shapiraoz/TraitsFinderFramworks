@@ -3,9 +3,9 @@ package Elements;
 public class ItemElement extends EnumElement implements IElement{
 
 	@Override
-	public void Serialize() {
+	public boolean  Serialize() {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 	public  ItemElement(String name)
@@ -14,9 +14,9 @@ public class ItemElement extends EnumElement implements IElement{
 	}
 
 	@Override
-	public void Link(IElement elment) {
+	public boolean Link(IElement elment) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 	

@@ -6,6 +6,7 @@ import Services.FileServices;
 import Services.Log.ELogLevel;
 import Services.Neo4J.Neo4JActivation;
 import Services.Neo4J.Neo4JServices;
+import Services.Neo4J.Neo4jServicesException;
 
 
 public class Neo4JSerializer extends ASerializer implements IElementSerializer  {
@@ -73,7 +74,13 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 			WriteLineToLog("no neo4j services ", ELogLevel.ERROR);
 			return false;
 		}
-		return  m_neoServies.AddWeightRelasion(m_element,elemet,m_isTxWasEnabled) ;
+		try 
+		{
+			return  m_neoServies.AddWeightRelasion(m_element,elemet,m_isTxWasEnabled) ;
+		} catch (Neo4jServicesException e) {
+			WriteLineToLog("Excpetion msg="+e.getMessage(), ELogLevel.ERROR);
+			return false;
+		}
 	
 	}
 
@@ -88,9 +95,9 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 
 
 	@Override
-	public boolean Close() 
+	public boolean Close(boolean success) 
 	{
-		if (m_neoServies!= null)  return m_neoServies.CloseTx();
+		if (m_neoServies!= null)  return m_neoServies.CloseTx(success);
 		/*if (Neo4JActivation.IsActive())
 		{
 			return Neo4JActivation.Stop();
@@ -116,6 +123,14 @@ public class Neo4JSerializer extends ASerializer implements IElementSerializer  
 			return m_neoServies.StartTx();
 		}
 		return false;
+	}
+
+
+
+	@Override
+	public boolean Close() 
+	{
+		return Close(true);
 	}
 
 

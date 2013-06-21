@@ -68,13 +68,13 @@ public class StringDataElement extends AElement implements IElement {
 	
 
 	@Override
-	public void Link(IElement elment) {
-		super.ActivateLinker(elment);
+	public boolean Link(IElement elment) {
+		return super.ActivateLinker(elment);
 		
 	}
 
 	@Override
-	public void Serialize() {
+	public boolean Serialize() {
 		//move to AElement !!
 		/*
 				if (m_serializerList.size() == 0)
@@ -90,7 +90,7 @@ public class StringDataElement extends AElement implements IElement {
 					}
 				}
 		*/
-		super.ActivateSerialiers(true);
+		return  super.ActivateSerialiers(true);
 	}
 
 

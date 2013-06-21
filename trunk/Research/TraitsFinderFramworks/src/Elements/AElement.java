@@ -48,34 +48,38 @@ public abstract class AElement  extends CommonCBase implements Serializable{
 		
 	}
 	
-	protected void ActivateSerialiers(boolean enableWrite)
+	protected boolean ActivateSerialiers(boolean enableWrite)
 	{
+		boolean status =true;
 		if (m_serializerList.size() == 0)
 		{
-			WriteLineToLog("no serializer for saving process ", ELogLevel.ERROR);
-			return ;
+			//WriteLineToLog("no serializer for saving process ", ELogLevel.ERROR);
+			return false;
 		}
 		else
 		{
 			for (IElementSerializer serializer : m_serializerList)
 			{
-				serializer.Save(enableWrite);
+				status&= serializer.Save(enableWrite);
 			}
 		}
+		return status;
 	}
 	
-	protected void ActivateLinker(IElement element)
+	protected boolean ActivateLinker(IElement element)
 	{
+		boolean status = true;
 		if (m_serializerList.size()==0)
 		{
-			WriteLineToLog("no serializers for linking process",ELogLevel.ERROR);
-			return;
+			//WriteLineToLog("no serializers for linking process",ELogLevel.ERROR);
+			return false;
 		}
 		
 		for (IElementSerializer serializer : m_serializerList)
 		{
-			serializer.Link(element);
+			 status &= serializer.Link(element);
 		}
+		return status;
 	}
 		
 	
