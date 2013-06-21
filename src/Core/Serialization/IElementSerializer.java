@@ -10,4 +10,5 @@ public interface IElementSerializer
 	boolean Link(IElement elemet);
 	IElement Load();
 	boolean Close(); //close to write
+	boolean Close(boolean success);
 }

@@ -1,6 +1,7 @@
 package Core;
 
 import Services.FileServices;
+import Services.Dom.DomDocument;
 import Services.Log.ELogLevel;
 
 public class CoreContext 
@@ -8,7 +9,8 @@ public class CoreContext
 	
 	protected static ACrawlerProcessor m_processor;
 	
-	public final static String CORE_VERSION = "1.1.4.4";
+	public final static String CORE_VERSION = "1.1.5.1";
+	
 	public final static String ROOT_DATA_FOLDER = "data/";
 	
 	public final static String EMPTY="";
@@ -48,7 +50,16 @@ public class CoreContext
 	{
 		boolean res = false;
 		if (!FileServices.PathExist(filePath)) return false;
-				
+		
+		try
+		{
+			DomDocument dm = new DomDocument(filePath);
+			
+		}
+		catch (Exception ex)
+		{
+			
+		}
 		return res;
 	}
 	

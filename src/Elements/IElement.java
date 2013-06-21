@@ -13,8 +13,8 @@ public interface IElement
 	void AddSerializer(IElementSerializer serializer);
 	void SetName(String elementName);
 	Map GetProperties();
-	void Serialize();
-	void Link(IElement elment);
+	boolean Serialize();
+	boolean Link(IElement elment);
 	String GetName();
 	Object GetProperty(String ProperyDef);
 		

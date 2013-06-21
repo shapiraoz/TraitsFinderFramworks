@@ -45,7 +45,6 @@ public class ACrawler  extends CommonCBase
 		}
 		if (fileExist)
 		{
-			
 			FileServices.DeleteFile(this.GetClassName(), filePath);
 		}
 		if (CoreContext.MAX_RUNNERS > 3) 
@@ -62,6 +61,15 @@ public class ACrawler  extends CommonCBase
 			}
 		}
 		
+		if(CoreContext.OFF_LINE_MODE)
+		{
+			String leaveMsg= "the file " + filePath + "is not found ... offline mode, skipping dowloading file.";
+			WriteLineToLog(leaveMsg, ELogLevel.WARNING);
+			WriteToConsole(leaveMsg);
+			return false;
+		}
+		
+		//download file in new thread
 		WgetCollectorExecutors collectorExecutors = new WgetCollectorExecutors(UrlPath, filePath);
 		Thread collectorThread = new Thread(collectorExecutors);
 		collectorThread.start();
