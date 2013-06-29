@@ -9,7 +9,7 @@ public class CoreContext
 	
 	protected static ACrawlerProcessor m_processor;
 	
-	public final static String CORE_VERSION = "1.1.5.1";
+	public final static String CORE_VERSION = "1.1.5.4_X";
 	
 	public final static String ROOT_DATA_FOLDER = "data/";
 	
@@ -40,8 +40,8 @@ public class CoreContext
 	
 	public ACrawlerProcessor GetProcssor() {return null;}
 	///////////////////////////////////////////////////////////////////////
-	
 	public static boolean COLLECT_STATISIC = true;
+	public static boolean FAST_MODE = false;
 	
 	
 	

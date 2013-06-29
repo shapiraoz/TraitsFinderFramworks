@@ -39,19 +39,16 @@ public class CSVBuilder extends CommonCBase
 			return false;
 		}
 		
-		if (line.length > m_numColmn) 
-		{
-			WriteLineToLog("number of lines are not coincident with number of column", ELogLevel.WARNING);
-		}
 		
-		if (line.length < m_numColmn)
+		/*if (line.length < m_numColmn)
 		{
 			WriteLineToLog("number of lines are less them header ...", ELogLevel.WARNING);
-			for (int i = line.length -1 ; i <m_numColmn ; i ++)
+			for (int i = line.length -1 ; i <line.length ; i ++)
 			{
 				line[i] = "";
 			}
 		}
+		*/
 		return  WriteInnerLine(line);
 		
 	}

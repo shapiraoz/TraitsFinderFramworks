@@ -70,9 +70,8 @@ public class ACrawlerProcessor extends CommonCBase
 		{
 			if (CrawlTopUserTarget(headElement,crawlType)!=null|| CoreContext.MAX_RUNNERS == 1 )
 			{
-				
-				if(crawled %30 == 0 && dumper != null) //TODO change it to ~150 users 
-				{
+				if(crawled%500 == 0 && dumper != null && crawled >1) //TODO change it to ~150 users 
+				{//add mutex 
 					if( !dumper.DumpAllTargetsStatData())
 					{
 						String errMsg = "failed to dump all users statistic Data";
@@ -84,7 +83,7 @@ public class ACrawlerProcessor extends CommonCBase
 				if (crawled % 50 == 0 && crawled!=0)
 				{
 					WriteToConsole("crawling proceed : " + crawled +  "objects have been crawled !!");
-					WriteToConsole("queue exist with " + QueueCrawlinTargets.GetInstance().NumbertOfTargets() +" objects are waiting to crawl...");
+					WriteToConsole( QueueCrawlinTargets.GetInstance().NumbertOfTargets() +" objects are waiting to be crawl...");
 				}
 				
 				WriteLineToLog("count ="+crawled,ELogLevel.INFORMATION);
