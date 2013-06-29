@@ -23,9 +23,6 @@ public abstract class ACrawlerFactory extends CommonCBase
 		return null;
 	}
 	
-	public IStatisticsDumper GetDumper()
-	{
-		return null;
-	}
+	
 	
 }
